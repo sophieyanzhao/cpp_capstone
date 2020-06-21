@@ -1,0 +1,37 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "C/C++: g++ build active file",
+            "command": "g++",
+            "args": [
+                "-std=c++17",
+                "-g",
+                "${file}",
+                "${fileDirname}/game.cpp",
+                "${fileDirname}/controller.cpp",
+                "${fileDirname}/renderer.cpp",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-I/Library/Frameworks/SDL2.framework/Headers",
+                "-I/Library/Frameworks/SDL2_image.framework/Headers",
+                "-F/Library/Frameworks",
+                "-framework",
+                "SDL2",
+                "-framework",
+                "SDL2_image"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
