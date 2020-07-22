@@ -1,5 +1,5 @@
-#include "controller.h"
 #include <iostream>
+#include "controller.h"
 #include "game.h"
 #include "renderer.h"
 using std::cout;
