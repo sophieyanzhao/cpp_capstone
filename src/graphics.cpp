@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cmath>
 #include <string>
+#include <sstream>
 using std::cout;
 
 Graphics::Graphics(){
@@ -69,8 +70,15 @@ bool Mole::GetGameState(){
 
 void Mole::Update(){
     Uint32 mole_start = SDL_GetTicks();
-    bool current;
-    while (current){
+    std::stringstream ss;
+    auto myid = std::this_thread::get_id();
+    ss << ""<< myid;
+    string mystring = ss.str();
+    SDL_Log("mole");
+    SDL_Log(mystring.c_str());
+    while (GetGameState()){
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        auto myid = std::this_thread::get_id();
      Uint32 mole_cycle_start = mole_start;
      Uint32  mole_now = SDL_GetTicks();
     if ((mole_now-mole_cycle_start)>update_duration){
@@ -78,10 +86,9 @@ void Mole::Update(){
         mole_cycle_start = SDL_GetTicks();
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
-     current = GetGameState();
     }
-    printf("exitting out of Update loop");
-    std::cout<< "exitting out of Update loop";
-
+   
+    SDL_Log( "exitting out of Update loop");
+    SDL_Log(mystring.c_str());
 };
 

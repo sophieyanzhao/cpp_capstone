@@ -14,7 +14,8 @@ class Renderer {
   //destructor 
   ~Renderer();
 
-  void RenderWindow();
+  void RenderWindow(std::vector<std::shared_ptr<Mole>> moles);
+  void DrawMoles(std::vector<std::shared_ptr<Mole>> moles);
   void UpdateWindowTitle(int score, int fps);
   SDL_Surface* LoadSurface(std::string path);
 

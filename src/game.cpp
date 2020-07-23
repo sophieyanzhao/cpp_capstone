@@ -2,14 +2,26 @@
 #include <iostream>
 #include "SDL.h"
 #include "controller.h"
-using std::cout;
+#include "graphics.h"
+#include <sstream>
+
+
 
 void dummy(){
+  auto myid = std::this_thread::get_id();
+  std::stringstream ss;
+  ss << ""<<myid;
+  string mystring = ss.str();
   SDL_Log("dummy task");
+  SDL_Log(mystring.c_str());
   };
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : engine(dev()){
+      for (int mole_id=0; mole_id<concurrency;mole_id++){
+        // initialize moles
+       _moles.push_back(std::make_shared<Mole>(100*(mole_id+1), 100*(mole_id+1), running));
+       }
       //random_w(0, static_cast<int>(grid_width)),
       //random_h(0, static_cast<int>(grid_height)) {
 };
@@ -17,31 +29,40 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
 Game::~Game(){
     std::for_each(threads.begin(), threads.end(), [](std::thread &t) {
         t.join();
-        SDL_Log("game destructor succcessfull joined all threads");
     });
+    SDL_Log("game destructor succcessfull joined all threads");
 }
 
-void Game::Run(Controller const &controller, Renderer &renderer,
+void Game::Run(Controller &controller, Renderer &renderer,
                std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks();
   Uint32 frame_start;
   Uint32 frame_end;
   Uint32 frame_duration;
   int frame_count = 0;
-  bool running = true;
   SDL_Log("game started running");
-  for (int i=0;i<concurrency;i++){
-         threads.emplace_back(std::thread(dummy));
+  for (std::shared_ptr<Mole> mole:_moles){
+        threads.emplace_back(std::thread(&Mole::Update, mole));
   }
-  while (running) {
-   
+  // for (int i=0;i<concurrency;i++){
+
+  //        //threads.emplace_back(std::thread(dummy));
+  // }
+
+  auto myid = std::this_thread::get_id();
+  std::stringstream ss;
+  ss << myid;
+  string mystring = ss.str();
+  SDL_Log("main task");
+  SDL_Log(mystring.c_str());
+  while (*running) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
     frame_start = SDL_GetTicks();
     controller.HandleInput(running);
 
     // Input, Update, Render - the main game loop.
     Update();
-    renderer.RenderWindow();
-
+    renderer.RenderWindow(_moles);
     frame_end = SDL_GetTicks();
 
     // Keep track of how long each loop through the input/update/render cycle
@@ -63,6 +84,8 @@ void Game::Run(Controller const &controller, Renderer &renderer,
       SDL_Delay(target_frame_duration - frame_duration);
     }
   }
+  SDL_Log("game loop has ended");
+
 }
 
 

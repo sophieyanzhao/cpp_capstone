@@ -43,9 +43,16 @@ Renderer::~Renderer() {
     SDL_Quit();
 }
 
-void Renderer::RenderWindow() {
+void Renderer::RenderWindow(std::vector<std::shared_ptr<Mole>> moles) {
     SDL_BlitSurface(graphics->grass, NULL, front_surface, NULL );
+    DrawMoles(moles);
     SDL_UpdateWindowSurface(sdl_window);
+}
+
+void Renderer::DrawMoles(std::vector<std::shared_ptr<Mole>> moles){
+   for (auto mole: moles){
+     SDL_BlitScaled(graphics->pictures[mole->stage], NULL, front_surface, &(mole->stretchRect));
+   }
 }
 
 void Renderer::UpdateWindowTitle(int score, int fps) {
