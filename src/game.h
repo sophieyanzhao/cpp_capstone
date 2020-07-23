@@ -5,6 +5,7 @@
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
+#include "mutexvariable.h"
 
 class Game {
  public:
@@ -12,7 +13,7 @@ class Game {
   void Run(Controller &controller, Renderer &renderer, std::size_t target_frame_duration);
   int GetScore() const;
   int GetSize() const;
-  std::shared_ptr<bool> running=std::make_shared<bool>(true);
+  std::shared_ptr<MutexVariable(bool)> running=std::make_shared<MutexVariable(bool)>(true);
   ~Game();
 
  private:

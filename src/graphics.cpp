@@ -48,7 +48,7 @@ SDL_Surface* Graphics::LoadSurface(std::string path){
     return loadedSurface;
     }
 
-Mole::Mole(int x, int y, std::shared_ptr<bool> game_state){
+Mole::Mole(int x, int y, std::shared_ptr<MutexVariable<bool>> game_state){
       stretchRect.x = x;
       stretchRect.y = y;
       stretchRect.w = 250 ;
@@ -61,12 +61,12 @@ Mole::Mole(int x, int y, std::shared_ptr<bool> game_state){
 Mole::~Mole(){ 
 };
 
-bool Mole::GetGameState(){
-    std::unique_lock<std::mutex> lck(_mutex);
-    bool state=*running;
-    lck.unlock();
-    return state;
-}
+// bool Mole::GetGameState(){
+//     std::unique_lock<std::mutex> lck(_mutex);
+//     bool state=*running;
+//     lck.unlock();
+//     return state;
+// }
 
 void Mole::Update(){
     Uint32 mole_start = SDL_GetTicks();
@@ -76,7 +76,7 @@ void Mole::Update(){
     string mystring = ss.str();
     SDL_Log("mole");
     SDL_Log(mystring.c_str());
-    while (GetGameState()){
+    while (running->get()){
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         auto myid = std::this_thread::get_id();
      Uint32 mole_cycle_start = mole_start;

@@ -6,6 +6,7 @@
 #include <string>
 #include <thread>
 #include <mutex>
+#include "mutexvariable.h"
 
 using std::vector;
 using std::string;
@@ -46,7 +47,7 @@ class Mole{
         SDL_Rect stretchRect;
         ~Mole();
         void Update();
-        std::shared_ptr<bool> running;
+        std::shared_ptr<MutexVariable<bool>> running;
         MoleStage stage{MoleStage::hidden};
 
     private: 

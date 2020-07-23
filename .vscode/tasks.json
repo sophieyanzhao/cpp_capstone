@@ -13,6 +13,7 @@
                 "${fileDirname}/graphics.cpp",
                 "${fileDirname}/controller.cpp",
                 "${fileDirname}/renderer.cpp",
+                "${fileDirname}/mutexvariable.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "-I/Library/Frameworks/SDL2.framework/Headers",
