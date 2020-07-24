@@ -8,7 +8,6 @@
 using std::cout;
 
 Graphics::Graphics(){
-    //format=format;
     grass = LoadSurface("../images/smaller_grass.png");
     for (int i = 0; i < 6; i++){
             SDL_Surface* loaded_surface = LoadSurface(file_paths[i]);

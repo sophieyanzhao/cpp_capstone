@@ -6,16 +6,6 @@
 #include <sstream>
 
 
-
-void dummy(){
-  auto myid = std::this_thread::get_id();
-  std::stringstream ss;
-  ss << ""<<myid;
-  string mystring = ss.str();
-  SDL_Log("dummy task");
-  SDL_Log(mystring.c_str());
-  };
-
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : engine(dev()){
       for (int mole_id=0; mole_id<concurrency;mole_id++){
@@ -55,7 +45,7 @@ void Game::Run(Controller &controller, Renderer &renderer,
   string mystring = ss.str();
   SDL_Log("main task");
   SDL_Log(mystring.c_str());
-  while (*running) {
+  while (running->get()) {
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
     frame_start = SDL_GetTicks();
     controller.HandleInput(running);
