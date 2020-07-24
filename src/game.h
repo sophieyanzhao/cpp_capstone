@@ -23,7 +23,7 @@ class Game {
   std::uniform_int_distribution<int> random_h;
   std::vector<std::thread> threads;
   std::vector<std::shared_ptr<Mole>> _moles;
-  int concurrency{3};
+  int concurrency{1};
   int score{0};
 
   void PlaceFood();

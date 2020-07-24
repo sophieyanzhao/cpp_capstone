@@ -3,14 +3,14 @@
 #include "SDL.h"
 #include "controller.h"
 #include "graphics.h"
-#include <sstream>
-
+#include <sstream>  
+// #include "assert.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : engine(dev()){
       for (int mole_id=0; mole_id<concurrency;mole_id++){
         // initialize moles
-       _moles.push_back(std::make_shared<Mole>(100*(mole_id+1), 100*(mole_id+1), running));
+       _moles.push_back(std::make_shared<Mole>(200*(mole_id+1), 200*(mole_id+1), running));
        }
       //random_w(0, static_cast<int>(grid_width)),
       //random_h(0, static_cast<int>(grid_height)) {
@@ -48,8 +48,9 @@ void Game::Run(Controller &controller, Renderer &renderer,
   while (running->get()) {
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
     frame_start = SDL_GetTicks();
-    controller.HandleInput(running);
-
+    // assert !_moles.empty();
+    controller.HandleInput(running,_moles.front());
+  
     // Input, Update, Render - the main game loop.
     Update();
     renderer.RenderWindow(_moles);

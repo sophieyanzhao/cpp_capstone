@@ -11,3 +11,5 @@ void MutexVariable<T>::set(T input){
             std::unique_lock lck(_mutex);
             _var=input;
         }
+
+template class MutexVariable<bool>;

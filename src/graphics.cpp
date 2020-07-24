@@ -78,16 +78,26 @@ void Mole::Update(){
     while (running->get()){
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         auto myid = std::this_thread::get_id();
-     Uint32 mole_cycle_start = mole_start;
-     Uint32  mole_now = SDL_GetTicks();
-    if ((mole_now-mole_cycle_start)>update_duration){
-        stage = MoleStage((stage+1)%MoleStage::end);
-        mole_cycle_start = SDL_GetTicks();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        if ((SDL_GetTicks()-mole_start)>update_duration){
+        idx=(idx+1)%8;
+        stage = transition[idx];
+        std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+        mole_start = SDL_GetTicks();
     }
     }
-   
-    SDL_Log( "exitting out of Update loop");
+    SDL_Log("exitting out of Update loop");
     SDL_Log(mystring.c_str());
 };
 
+// bool Mole::CheckAlive(std::shared_ptr<MutexVariable<bool>> alive){
+
+// }
+
+bool Mole::Hit(int &x,int &y){
+    bool cond1 = (x>stretchRect.x + 70);
+    bool cond2 = (x<stretchRect.x + 150);
+    bool cond3 = (y<stretchRect.y+85);
+    bool cond4 = y-(2.0/39.0)*x > (stretchRect.y+60.0-(2.0/39.0)*(stretchRect.x+70.0))-offset[stage];
+    bool cond5 = y+(2.0/39.0)*x > (stretchRect.y+62.0+(218.0+2.0*stretchRect.x)/39.0)-offset[stage];
+    return (cond1 && cond2 && cond3 && cond4 && cond5);
+}
