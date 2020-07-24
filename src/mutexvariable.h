@@ -9,10 +9,17 @@ class MutexVariable {
         T get();
         void set(T input);
 
-    private:
+    protected:
         T _var;
         std::mutex _mutex;
 
 
 };
+
+class Score:public MutexVariable<int> {
+    public:
+        Score():MutexVariable<int>(0){};
+        void AddOne();
+};
+
 #endif

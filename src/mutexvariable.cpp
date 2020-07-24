@@ -12,4 +12,10 @@ void MutexVariable<T>::set(T input){
             _var=input;
         }
 
+void Score::AddOne(){
+            _var=_var+1;
+        }
+
+template class MutexVariable<int>;
 template class MutexVariable<bool>;
+

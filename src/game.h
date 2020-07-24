@@ -24,9 +24,7 @@ class Game {
   std::vector<std::thread> threads;
   std::vector<std::shared_ptr<Mole>> _moles;
   int concurrency{1};
-  int score{0};
-
-  void PlaceFood();
+  std::shared_ptr<Score> score = std::make_shared<Score>();
   void Update();
 };
 

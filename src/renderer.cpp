@@ -55,8 +55,8 @@ void Renderer::DrawMoles(std::vector<std::shared_ptr<Mole>> moles){
    }
 }
 
-void Renderer::UpdateWindowTitle(int score, int fps) {
-  std::string title{"Whac a mole: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
+void Renderer::UpdateWindowTitle(std::shared_ptr<Score> score, int fps) {
+  std::string title{"Whac a mole: " + std::to_string(score->get()) + " FPS: " + std::to_string(fps)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
 }
 

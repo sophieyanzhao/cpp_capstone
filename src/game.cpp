@@ -49,7 +49,7 @@ void Game::Run(Controller &controller, Renderer &renderer,
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
     frame_start = SDL_GetTicks();
     // assert !_moles.empty();
-    controller.HandleInput(running,_moles.front());
+    controller.HandleInput(running,_moles.front(),score);
   
     // Input, Update, Render - the main game loop.
     Update();
@@ -84,4 +84,4 @@ void Game::Update() {
     // put updating logics here
 }
 
-int Game::GetScore() const { return score; }
+int Game::GetScore() const { return score->get(); }
