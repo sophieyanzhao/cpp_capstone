@@ -58,14 +58,25 @@ Mole::Mole(int x, int y, std::shared_ptr<MutexVariable<bool>> game_state){
 
 
 Mole::~Mole(){ 
+    // std::for_each(moving_tasks.begin(), moving_tasks.end(), [](std::thread &t) {
+    //     t.join();
+    // });
+    // std::for_each(check_alive_tasks.begin(), check_alive_tasks.end(), [](std::thread &t) {
+    //     t.join();
+    // });
+    moving_task.join();
+    // check_alive_task.join();
+    SDL_Log("mole destructor succcessfull joined all threads");
 };
 
-// bool Mole::GetGameState(){
-//     std::unique_lock<std::mutex> lck(_mutex);
-//     bool state=*running;
-//     lck.unlock();
-//     return state;
-// }
+
+void Mole::Simulate(std::shared_ptr<Score> score){
+    moving_task = std::thread(&Mole::Update, this);
+    // check_alive_task=std::thread(&Mole::CheckAlive, this, score, running);
+    //check_alive_tasks.emplace_back(std::async(std::launch::async, &Mole::CheckAlive, this,score, running));
+}
+
+
 
 void Mole::Update(){
     Uint32 mole_start = SDL_GetTicks();
@@ -75,16 +86,17 @@ void Mole::Update(){
     string mystring = ss.str();
     SDL_Log("mole");
     SDL_Log(mystring.c_str());
-    while (running->get()){
+    while (running->get()&&alive->get()){
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         auto myid = std::this_thread::get_id();
         if ((SDL_GetTicks()-mole_start)>update_duration){
         idx=(idx+1)%8;
         stage = transition[idx];
-        std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
         mole_start = SDL_GetTicks();
     }
     }
+    hit_signals->send(Position(stretchRect.x+100, stretchRect.y+60));
     SDL_Log("exitting out of Update loop");
     SDL_Log(mystring.c_str());
 };
@@ -96,8 +108,23 @@ void Mole::Update(){
 bool Mole::Hit(int &x,int &y){
     bool cond1 = (x>stretchRect.x + 70);
     bool cond2 = (x<stretchRect.x + 150);
-    bool cond3 = (y<stretchRect.y+85);
+    bool cond3 = (y<stretchRect.y+70); // bottom is 85 but we can make it more difficult 
     bool cond4 = y-(2.0/39.0)*x > (stretchRect.y+60.0-(2.0/39.0)*(stretchRect.x+70.0))-offset[stage];
     bool cond5 = y+(2.0/39.0)*x > (stretchRect.y+62.0+(218.0+2.0*stretchRect.x)/39.0)-offset[stage];
     return (cond1 && cond2 && cond3 && cond4 && cond5);
+}
+
+
+void Mole::CheckAlive(std::shared_ptr<Score> score , std::shared_ptr<MutexVariable<bool>> running){
+    while (running->get() && alive->get()){
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        Position p = hit_signals->receive();
+        std::string hitMessage="the mole gets hitted: at"+std::to_string(p._x) + " , "+ std::to_string(p._y);
+        SDL_Log(hitMessage.c_str());
+        if (Hit(p._x, p._y)){
+            score->AddOne();
+            alive->set(false);
+        }
+    }
+    SDL_Log("mole is dying now");
 }

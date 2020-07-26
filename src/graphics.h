@@ -8,6 +8,7 @@
 #include <mutex>
 #include "mutexvariable.h"
 #include <memory>
+#include <future>
 
 using std::vector;
 using std::string;
@@ -56,9 +57,15 @@ class Mole{
         int idx{0};
         MoleStage stage{MoleStage::hidden};
         std::vector<float> offset = {0.0, 0.0, 25.0, 45.0};
-        //std::shared_ptr<MutexVariable<bool>> alive=std::make_shared<MutexVariable<bool>>(true);
+        std::shared_ptr<MutexVariable<bool>> alive=std::make_shared<MutexVariable<bool>>(true);
+        void CheckAlive(std::shared_ptr<Score> score, std::shared_ptr<MutexVariable<bool>> running);
         //bool CheckAlive(std::shared_ptr<MutexVariable<bool>> alive);
+        std::shared_ptr<MessageQueue<Position>> hit_signals=std::make_shared<MessageQueue<Position>>();
         bool Hit(int &x,int &y);
+        void Simulate(std::shared_ptr<Score> score);
+        std::thread moving_task;
+        std::thread check_alive_task;
+        std::vector<std::future<void>> check_alive_tasks;
     
     private: 
         Uint32 update_duration{100};
