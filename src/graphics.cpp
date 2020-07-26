@@ -9,7 +9,7 @@ using std::cout;
 
 Graphics::Graphics(){
     grass = LoadSurface("../images/smaller_grass.png");
-    for (int i = 0; i < 6; i++){
+    for (int i = 0; i <file_paths.size() ; i++){
             SDL_Surface* loaded_surface = LoadSurface(file_paths[i]);
             pictures.push_back(loaded_surface);
         }
@@ -64,15 +64,16 @@ Mole::~Mole(){
     // std::for_each(check_alive_tasks.begin(), check_alive_tasks.end(), [](std::thread &t) {
     //     t.join();
     // });
+    //emplace back calls constructor, push_back calls copy constructor
     moving_task.join();
-    // check_alive_task.join();
+    check_alive_task.join();
     SDL_Log("mole destructor succcessfull joined all threads");
 };
 
 
 void Mole::Simulate(std::shared_ptr<Score> score){
     moving_task = std::thread(&Mole::Update, this);
-    // check_alive_task=std::thread(&Mole::CheckAlive, this, score, running);
+    check_alive_task=std::thread(&Mole::CheckAlive, this, score, running);
     //check_alive_tasks.emplace_back(std::async(std::launch::async, &Mole::CheckAlive, this,score, running));
 }
 

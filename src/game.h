@@ -22,8 +22,6 @@ class Game {
   std::mt19937 engine;
   std::uniform_int_distribution<int> random_w;
   std::uniform_int_distribution<int> random_h;
-  // std::vector<std::thread> threads;
-  // std::vector<std::future<void>> tasks;
   std::vector<std::shared_ptr<Mole>> _moles;
   int concurrency{4};
   std::shared_ptr<Score> score = std::make_shared<Score>();

@@ -7,7 +7,7 @@
 using std::future;
 
 
-void Controller::HandleInput(std::shared_ptr<MutexVariable<bool>> running, std::vector<std::shared_ptr<Mole>> moles,std::shared_ptr<Score> score) {
+void Controller::HandleInput(std::shared_ptr<MutexVariable<bool>> running, std::vector<std::shared_ptr<Mole>> &moles,std::shared_ptr<Score> score) {
   SDL_Event e;
   //TODO: potential data race
   while (SDL_PollEvent(&e) && (running->get())){
