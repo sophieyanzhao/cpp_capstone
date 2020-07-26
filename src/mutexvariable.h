@@ -2,6 +2,8 @@
 #define MUTEXVARIABLE_H
 
 #include <mutex>
+#include <queue>
+
 template <class T>
 class MutexVariable {
     public:
@@ -20,6 +22,26 @@ class Score:public MutexVariable<int> {
     public:
         Score():MutexVariable<int>(0){};
         void AddOne();
+};
+
+
+template <class T>
+class MessageQueue{
+    public:
+        T receive();
+        void send(T msg);
+
+    private:
+        std::mutex _mutex;
+        std::condition_variable _cond;
+        std::deque<T> _messages;
+    };
+
+
+struct Position{
+    Position(int x, int y);
+    int _x;
+    int _y;
 };
 
 #endif

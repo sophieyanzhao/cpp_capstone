@@ -1,10 +1,13 @@
 #include <string>
 #include <iostream>
+#include <vector>
 
 int main(){
-    int i{1};
-    // char 1 byte 
-    // int is 4 byte let's assign 6 as max
-    std::string x = std::to_string(1)+std::to_string(2);
-    std::cout<< x;
+    std::vector<int> v {1,2,3,4};
+    
+    auto it = remove_if(v.begin(),v.end(), [](int &i){return (i%2)==0;});
+    v.erase(it, v.end());
+    for(int i=0;i<v.size(); i++){
+       std::cout << v[i] << " ";
+    }
 }
