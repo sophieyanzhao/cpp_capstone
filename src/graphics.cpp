@@ -10,6 +10,7 @@ using std::cout;
 Graphics::Graphics(){
     grass = LoadSurface("../images/smaller_grass.png");
     for (int i = 0; i <file_paths.size() ; i++){
+
             SDL_Surface* loaded_surface = LoadSurface(file_paths[i]);
             pictures.push_back(loaded_surface);
         }
@@ -30,7 +31,7 @@ SDL_Surface* Graphics::LoadSurface(std::string path){
     if( loadedSurface == NULL)
     {
         SDL_Log("Unable to load image! SDL_image Error\n");
-        
+        SDL_Log(path.c_str()); 
     }
     // else
     // {   
