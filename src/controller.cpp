@@ -35,8 +35,8 @@ std::shared_ptr<bool> reset) {
     }else if (e.type==SDL_MOUSEBUTTONDOWN){
       int x, y;
       SDL_GetMouseState(&x,&y);
-      // std::string position = "x:" + std::to_string(x)+ "y:"+ std::to_string(y);
-      // SDL_Log(position.c_str());
+      std::string position = "x:" + std::to_string(x)+ "y:"+ std::to_string(y);
+      SDL_Log(position.c_str());
       Position p=Position(x,y);
       std::vector<future<void>> tasks;
       for (std::shared_ptr<Mole> mole:moles){

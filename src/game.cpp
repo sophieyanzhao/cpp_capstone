@@ -5,24 +5,38 @@
 #include "graphics.h"
 #include <sstream>  
 #include <future>
+#include <cstdlib>
 // #include "assert.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : engine(dev()){
+Game::Game(std::size_t kScreenWidth, std::size_t kScreenHeight):engine(dev()){
+      kScreenWidth = kScreenWidth;
+      kScreenHeight = kScreenHeight;
+      intWidth = (int) kScreenWidth;
+      intHeight = (int) kScreenHeight;
       Init();
-      kScreenWidth = grid_width;
-      kScreenHeight = grid_height;
-      //random_w(0, static_cast<int>(grid_width)),
-      //random_h(0, static_cast<int>(grid_height)) {
+
 };
+
+bool Game::LegalPos(int x, int y){
+  if (x<1 || y<1){return false;}
+  for (auto mole:_moles){if (std::abs(x-mole->stretchRect.x)<90 || std::abs(y-mole->stretchRect.y)<90){return false;} }
+  return true;
+}
 
 void Game::Init(){
    running->set(true);
    time_remaining=game_duration;
+   std::uniform_int_distribution<int> random_w(0, (intWidth-200));
+   std::uniform_int_distribution<int> random_h(0, (intHeight-180)); 
    score->set(0);
    for (int mole_id=0; mole_id<concurrency;mole_id++){
-        // initialize moles
-       _moles.push_back(std::make_shared<Mole>(100*(mole_id+1), 100*(mole_id+1), running));
+       int x{0};
+       int y{0};
+       while (!LegalPos(x,y)){
+       x=random_w(engine);
+       y=random_h(engine);
+       }
+       _moles.push_back(std::make_shared<Mole>(x, y, running));
   }
 };
 

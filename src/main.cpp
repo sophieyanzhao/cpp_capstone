@@ -14,7 +14,7 @@ int main() {
 
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
   Controller controller;
-  Game game(kGridWidth, kGridHeight);
+  Game game(kScreenWidth, kScreenHeight);
   game.Run(controller, renderer, kMsPerFrame);
   cout << "Game has terminated successfully!\n";
   return 0;
