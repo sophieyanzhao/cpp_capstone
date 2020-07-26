@@ -11,10 +11,18 @@
 class Game {
  public:
   Game(std::size_t grid_width, std::size_t grid_height);
+  void Init(); // restart the game 
   void Run(Controller &controller, Renderer &renderer, std::size_t target_frame_duration);
   int GetScore() const;
+  int game_start{(int)SDL_GetTicks()};
+  int time_remaining{60};
+  std::size_t kScreenWidth;
+  std::size_t kScreenHeight;
+  int game_duration{5};
   int GetSize() const;
   std::shared_ptr<MutexVariable<bool>> running=std::make_shared<MutexVariable<bool>>(true);
+  std::shared_ptr<MutexVariable<bool>> exited=std::make_shared<MutexVariable<bool>>(true);
+  std::shared_ptr<bool> reset = std::make_shared<bool>(false);
   ~Game();
 
  private:

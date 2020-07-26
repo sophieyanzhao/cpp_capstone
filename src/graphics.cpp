@@ -97,7 +97,8 @@ void Mole::Update(){
         mole_start = SDL_GetTicks();
     }
     }
-    hit_signals->send(Position(stretchRect.x+100, stretchRect.y+60));
+    // send signal to end the CheckAlive Task
+    hit_signals->send(Position(-1, -1));
     SDL_Log("exitting out of Update loop");
     SDL_Log(mystring.c_str());
 };
@@ -124,6 +125,8 @@ void Mole::CheckAlive(std::shared_ptr<Score> score , std::shared_ptr<MutexVariab
         SDL_Log(hitMessage.c_str());
         if (Hit(p._x, p._y)){
             score->AddOne();
+            alive->set(false);
+        }else if (p._x<0 && p._y <0){
             alive->set(false);
         }
     }
