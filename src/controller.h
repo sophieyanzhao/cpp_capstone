@@ -9,7 +9,7 @@
 
 class Controller{
     public: 
-        void HandleInput(std::shared_ptr<MutexVariable<bool>> running, std::shared_ptr<Mole> mole, std::shared_ptr<Score> score);
+        void HandleInput(std::shared_ptr<MutexVariable<bool>> running, std::vector<std::shared_ptr<Mole>> &moles, std::shared_ptr<Score> score);
 
 };
 
