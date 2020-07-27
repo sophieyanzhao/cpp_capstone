@@ -1,47 +1,44 @@
-## Project Description
-Describes the project you have built.
-The README also indicates the file and class structure, along with the expected behavior or output of the program.
+## Whac A Mole Video Game
+This is Sophie's capstone project for Udacity's C++ Nanodegree. Whac a Mole was a very popular arcade game when I was young and I still remember playing on those coin-op machines on my way home from school. Now is a good chance to try bringing it into a video form with my c++ learning. Graphics are scraped from a free game platform called 4399.com.
+### Game Rules
 
-## Game Rules
+![instruction](/images/cpp_capstone_instruction.png)
+* User can hit each mole at the top area to score 1 point (see the white outline in the graph above as an example). The scoring area is smaller when the mole is half hidden in the hole than when the mole is fully straight up. 
+* After being hit the mole will disappear and a new one will come up after some wait time.
+* User has a maximum of 30 seconds. After one round ends, user can press `r` key to restart the game. The operation will not be effective if the previous game hasn't timed out yet.
+* In order to create asynchronous behaviors, each mole may hide 0-3 seconds before starting to move.
+* User may click the x on the top left corner to exit, or simply press the `esc` key.
+
+## Structure
+### File Structure
+```
+cpp_capstone
+│   README.md  
+│   rubrics.md
+└─── src 
+|   |   main.cpp
+|   |   game.h
+|   |   game.cpp
+│   │   controller.cpp 
+│   │   controller.h 
+│   │   graphics.cpp
+|   |   graphics.h
+|   |   renderer.h
+|   |   renderer.cpp
+|   |   mutexvariable.cpp 
+|   |   mutexvariable.h
+└───images 
+|   | ...
+|
+└───build 
+    |   file021.txt
+```
+
+### Class Structure 
+![class structure](/images/cpp_capstone_flowchart.png)
 
 
+  
 ## Installation Instruction
 
-
-
-
-## Rubrics satisfied (make this a hyperlink)
-
-1. The project reads data from an external file or writes data to a file as part of the necessary operation of the program.
-Explanation: The game load image files and scale them to display onto the screen
-
-2. The project accepts user input and processes the input.
-Explanation: The game takes user input to restart/exit/score.
-
-3. The project uses Object Oriented Programming techniques.
-Explanation: All game elements are wrapped into classes, such as controller, game, message_queue, moles etc.
-
-4. Class constructors utilize member initialization lists.
-TODO: change here; 
-
-5. Templates generalize functions in the project.
-Explanation: mutexvariable with thread-safe getter/setter uses template.
-
-6. The project makes use of references in function declarations.
-Explanation: most variables are shared pointers to ensure no excessive memory are taken to copy the objects.
-
-7. The project uses scope / Resource Acquisition Is Initialization (RAII) where appropriate.
-Explanation: the mole object class manages two threads individually and handle them before being destructed.
-
-8. The project uses multithreading.
-Explanation: Each mole has two threads: 1 thread for updating mole stage, 1 thread for checking user mouse click position.
-
-9. A condition variable is used in the project.
-Explanation: message queue uses condition variable to wait for user mouse click location information sent from controller object.
-
-
-
-
-
-
-Use Cmake/make 
+ [after build]
