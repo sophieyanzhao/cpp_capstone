@@ -12,13 +12,10 @@ Renderer::Renderer(const std::size_t screen_width,
       screen_height(screen_height),
       grid_width(grid_width),
       grid_height(grid_height) {
-  // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL could not initialize.\n";
     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
   }
-
-  // Create Window
   sdl_window = SDL_CreateWindow("Whac A Mole", SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED, screen_width,
                                 screen_height, SDL_WINDOW_SHOWN);
@@ -29,12 +26,6 @@ Renderer::Renderer(const std::size_t screen_width,
     std::cerr << "Window or surface could not be created.\n";
     std::cerr << " SDL_Error: " << SDL_GetError() << "\n";
   }
-  // Create renderer
-  //(sdl_window, -1, SDL_RENDERER_ACCELERATED);
-//   if (nullptr == sdl_renderer) {
-//     std::cerr << "Renderer could not be created.\n";
-//     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
-//   }
 }
 
 Renderer::~Renderer() {
@@ -50,11 +41,6 @@ void Renderer::RenderWindow(std::vector<std::shared_ptr<Mole>> &moles) {
     SDL_UpdateWindowSurface(sdl_window);
 }
 
-// bool ProcessDeadMole(std::shared_ptr<Mole> mole){
-//      bool alive = mole->alive->get();
-    
-//      return alive;
-// }
 
 void Renderer::DrawMoles(std::vector<std::shared_ptr<Mole>> &moles){
    std::mutex mole_mutex;

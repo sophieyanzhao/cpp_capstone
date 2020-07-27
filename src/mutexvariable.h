@@ -25,7 +25,7 @@ class Score:public MutexVariable<int> {
         void AddOne();
 };
 
-
+// citation: codes for MessageQueue class are modified from udacity c++ lecture note 
 template <class T>
 class MessageQueue{
     public:

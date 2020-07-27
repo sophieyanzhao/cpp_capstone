@@ -28,7 +28,7 @@ void Game::Init(){
    running->set(true);
    time_remaining=game_duration;
 
-   // generate random position 
+   // generate random position until we get a legal position
    std::random_device dev;
    std::mt19937 engine(dev());
    std::uniform_int_distribution<int> random_w(0, (intWidth-230));
@@ -52,18 +52,17 @@ void Game::Run(Controller &controller, Renderer &renderer,
                std::size_t target_frame_duration) {
   Uint32 frame_start, frame_end, frame_duration;
   int frame_count = 0;
-  SDL_Log("game started running");
+  // turn all mole on for movements
   for (std::shared_ptr<Mole> mole:_moles){
         mole->Simulate(score);
        
   }
-
+   
   auto myid = std::this_thread::get_id();
   std::stringstream ss;
   ss << myid;
   string mystring = ss.str();
-  SDL_Log("main task");
-  SDL_Log(mystring.c_str());
+  SDL_Log("main task id %s", mystring.c_str());
   while (running->get()||exited->get()) {
     if (*reset){
        game_start= (int)SDL_GetTicks();
@@ -77,12 +76,11 @@ void Game::Run(Controller &controller, Renderer &renderer,
     frame_start = SDL_GetTicks();
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
     controller.HandleInput(running,exited,_moles,score,reset);
-    // After every 1/100 second, update the window title.
+    // After every 1/10 second, update the window title.
     if (frame_count >= 100){
        if (running->get()){
           time_remaining=game_duration-((int)SDL_GetTicks()-game_start)/1000;
           if (time_remaining<0 && running->get()){
-            SDL_Log("time is done!");
             time_remaining=0;
             running->set(false);
           }else if(_moles.size()<concurrency){
@@ -109,9 +107,7 @@ void Game::Run(Controller &controller, Renderer &renderer,
       frame_count = 0;
     }
 
-    // If the time for this frame is too small (i.e. frame_duration is
-    // smaller than the target ms_per_frame), delay the loop to
-    // achieve the correct frame rate.
+    // delay the loop if it is running faster than a preset threshold 
     frame_end = SDL_GetTicks();
     frame_duration = frame_end - frame_start;
     if (frame_duration < target_frame_duration) {
@@ -120,8 +116,4 @@ void Game::Run(Controller &controller, Renderer &renderer,
     frame_count+=target_frame_duration;
   }
   SDL_Log("game loop has ended");
-
 }
-
-
-int Game::GetScore() const { return score->get(); }

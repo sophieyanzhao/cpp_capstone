@@ -10,26 +10,25 @@
 
 class Game {
  public:
-  Game(std::size_t kScreenWidth, std::size_t kScreenHeight);
-  void Init(); // restart the game 
-  void Run(Controller &controller, Renderer &renderer, std::size_t target_frame_duration);
-  int GetScore() const;
+  //variables 
+  int game_duration{5};
   int game_start{(int)SDL_GetTicks()};
   int time_remaining;
-  std::size_t kScreenWidth;
-  std::size_t kScreenHeight;
+  std::size_t kScreenWidth, kScreenHeight;
   int intWidth, intHeight;
-  int game_duration{5};
-  int GetSize() const;
   std::shared_ptr<MutexVariable<bool>> running=std::make_shared<MutexVariable<bool>>(true);
   std::shared_ptr<MutexVariable<bool>> exited=std::make_shared<MutexVariable<bool>>(true);
   std::shared_ptr<bool> reset = std::make_shared<bool>(false);
+  
+  Game(std::size_t kScreenWidth, std::size_t kScreenHeight);
+  void Init(); // restart the game 
+  void Run(Controller &controller, Renderer &renderer, std::size_t target_frame_duration);
   bool LegalPos(int x, int y);
   ~Game();
 
  private:
+  int concurrency{5}; // number of moles appearing at the same time
   std::vector<std::shared_ptr<Mole>> _moles;
-  int concurrency{5};
   std::shared_ptr<Score> score = std::make_shared<Score>();
 };
 

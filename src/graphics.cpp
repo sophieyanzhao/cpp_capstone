@@ -10,7 +10,6 @@ using std::cout;
 Graphics::Graphics(){
     grass = LoadSurface("../images/smaller_grass.png");
     for (int i = 0; i <file_paths.size() ; i++){
-
             SDL_Surface* loaded_surface = LoadSurface(file_paths[i]);
             pictures.push_back(loaded_surface);
         }
@@ -24,17 +23,14 @@ Graphics::~Graphics(){
 }
 
 SDL_Surface* Graphics::LoadSurface(std::string path){
-    //The final optimized image
     SDL_Surface* optimizedSurface = NULL;
-    //Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-    if( loadedSurface == NULL)
-    {
-        SDL_Log("Unable to load image! SDL_image Error\n");
-        SDL_Log(path.c_str()); 
+    if( loadedSurface == NULL){
+        SDL_Log("Unable to load image! Path is %s", path.c_str());
     }
     return loadedSurface;
-    }
+}
+
 
 Mole::Mole(int x, int y, std::shared_ptr<MutexVariable<bool>> game_state){
       stretchRect.x = x;
@@ -62,7 +58,8 @@ void Mole::Simulate(std::shared_ptr<Score> score){
 
 
 void Mole::Update(){
-    // add some asynchronous behaviors to mole 
+    // add some asynchronous behaviors to mole, each mole will stay still for a random amount of time
+    // between 0 and 3 seconds 
     Uint32 start = SDL_GetTicks();
     std::random_device dev;
     std::mt19937 engine(dev());
@@ -76,8 +73,7 @@ void Mole::Update(){
     auto myid = std::this_thread::get_id();
     ss << ""<< myid;
     string mystring = ss.str();
-    SDL_Log("mole");
-    SDL_Log(mystring.c_str());
+    SDL_Log("mole thread id %s", mystring.c_str());
     while (running->get()&&alive->get()){
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         auto myid = std::this_thread::get_id();
@@ -90,15 +86,12 @@ void Mole::Update(){
     }
     // send signal to end the CheckAlive Task
     hit_signals->send(Position(-1, -1));
-    SDL_Log("exitting out of Update loop");
-    SDL_Log(mystring.c_str());
+    SDL_Log("exitting out of Update loop at thread %s", mystring.c_str());
 };
 
-// bool Mole::CheckAlive(std::shared_ptr<MutexVariable<bool>> alive){
-
-// }
 
 bool Mole::Hit(int &x,int &y){
+    // if user hits a polygon at the top of a mole,user gets 1 score and mole dies.
     bool cond1 = (x>stretchRect.x + 70);
     bool cond2 = (x<stretchRect.x + 150);
     bool cond3 = (y<stretchRect.y+70); // bottom is 85 but we can make it more difficult 
@@ -112,8 +105,7 @@ void Mole::CheckAlive(std::shared_ptr<Score> score , std::shared_ptr<MutexVariab
     while (running->get() && alive->get()){
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         Position p = hit_signals->receive();
-        std::string hitMessage="the mole gets hitted: at"+std::to_string(p._x) + " , "+ std::to_string(p._y);
-        SDL_Log(hitMessage.c_str());
+        SDL_Log("the mole gets hitted: at x: %d y: %d", p._x, p._y);
         if (Hit(p._x, p._y)){
             score->AddOne();
             alive->set(false);
