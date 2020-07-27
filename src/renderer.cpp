@@ -56,7 +56,7 @@ void Renderer::DrawMoles(std::vector<std::shared_ptr<Mole>> &moles){
  
 
 void Renderer::UpdateWindowTitle(std::shared_ptr<Score> score, int time_left) {
-  std::string title{"Whac a mole Score: " + std::to_string(score->get()) + " Time Remaining: " + std::to_string(time_left)};
+  std::string title{"Whac a Mole Score: " + std::to_string(score->get()) + " Time Remaining: " + std::to_string(time_left)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
 }
 
