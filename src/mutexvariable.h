@@ -10,6 +10,7 @@ class MutexVariable {
         MutexVariable(T init):_var(init){};
         T get();
         void set(T input);
+        
 
     protected:
         T _var;

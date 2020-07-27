@@ -33,18 +33,6 @@ SDL_Surface* Graphics::LoadSurface(std::string path){
         SDL_Log("Unable to load image! SDL_image Error\n");
         SDL_Log(path.c_str()); 
     }
-    // else
-    // {   
-    //     //Convert surface to screen format
-    //     optimizedSurface = SDL_ConvertSurface(loadedSurface,format,0 );
-    //     if( optimizedSurface == NULL ){
-    //         SDL_Log("Unable to optimize image! SDL Error:\n");
-    //         return loadedSurface;
-    //     }else{
-
-    //     //Get rid of old loaded surface
-    //     SDL_FreeSurface(loadedSurface);
-    //     return optimizedSurface;
     return loadedSurface;
     }
 
@@ -59,12 +47,6 @@ Mole::Mole(int x, int y, std::shared_ptr<MutexVariable<bool>> game_state){
 
 
 Mole::~Mole(){ 
-    // std::for_each(moving_tasks.begin(), moving_tasks.end(), [](std::thread &t) {
-    //     t.join();
-    // });
-    // std::for_each(check_alive_tasks.begin(), check_alive_tasks.end(), [](std::thread &t) {
-    //     t.join();
-    // });
     //emplace back calls constructor, push_back calls copy constructor
     moving_task.join();
     check_alive_task.join();
@@ -75,12 +57,20 @@ Mole::~Mole(){
 void Mole::Simulate(std::shared_ptr<Score> score){
     moving_task = std::thread(&Mole::Update, this);
     check_alive_task=std::thread(&Mole::CheckAlive, this, score, running);
-    //check_alive_tasks.emplace_back(std::async(std::launch::async, &Mole::CheckAlive, this,score, running));
 }
 
 
 
 void Mole::Update(){
+    // add some asynchronous behaviors to mole 
+    Uint32 start = SDL_GetTicks();
+    std::random_device dev;
+    std::mt19937 engine(dev());
+    std::uniform_int_distribution<Uint32> waitTimeGen(0, 3000);
+    Uint32 waitTime = waitTimeGen(engine);
+    while ((SDL_GetTicks()-start)<waitTime){
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
     Uint32 mole_start = SDL_GetTicks();
     std::stringstream ss;
     auto myid = std::this_thread::get_id();

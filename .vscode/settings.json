@@ -65,6 +65,7 @@
         "queue": "cpp",
         "random": "cpp",
         "thread": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "__functional_03": "cpp"
     }
 }
