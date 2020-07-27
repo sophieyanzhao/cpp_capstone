@@ -11,7 +11,7 @@
 class Game {
  public:
   //variables 
-  int game_duration{5};
+  int game_duration{30};
   int game_start{(int)SDL_GetTicks()};
   int time_remaining;
   std::size_t kScreenWidth, kScreenHeight;
