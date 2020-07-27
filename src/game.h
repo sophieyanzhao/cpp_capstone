@@ -15,7 +15,7 @@ class Game {
   void Run(Controller &controller, Renderer &renderer, std::size_t target_frame_duration);
   int GetScore() const;
   int game_start{(int)SDL_GetTicks()};
-  int time_remaining{60};
+  int time_remaining;
   std::size_t kScreenWidth;
   std::size_t kScreenHeight;
   int intWidth, intHeight;
@@ -28,10 +28,8 @@ class Game {
   ~Game();
 
  private:
-  std::random_device dev;
-  std::mt19937 engine;
   std::vector<std::shared_ptr<Mole>> _moles;
-  int concurrency{4};
+  int concurrency{5};
   std::shared_ptr<Score> score = std::make_shared<Score>();
 };
 

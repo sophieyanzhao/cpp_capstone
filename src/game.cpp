@@ -6,9 +6,10 @@
 #include <sstream>  
 #include <future>
 #include <cstdlib>
-// #include "assert.h"
+#include <cmath>
+using std::pow;
 
-Game::Game(std::size_t kScreenWidth, std::size_t kScreenHeight):engine(dev()){
+Game::Game(std::size_t kScreenWidth, std::size_t kScreenHeight):time_remaining(game_duration){
       kScreenWidth = kScreenWidth;
       kScreenHeight = kScreenHeight;
       intWidth = (int) kScreenWidth;
@@ -19,19 +20,22 @@ Game::Game(std::size_t kScreenWidth, std::size_t kScreenHeight):engine(dev()){
 
 bool Game::LegalPos(int x, int y){
   if (x<1 || y<1){return false;}
-  for (auto mole:_moles){if (std::abs(x-mole->stretchRect.x)<90 || std::abs(y-mole->stretchRect.y)<90){return false;} }
+  for (auto mole:_moles){if (pow(x-mole->stretchRect.x,2) +pow(y-mole->stretchRect.y,2)< pow(200,2)){return false;} }
   return true;
 }
 
 void Game::Init(){
    running->set(true);
    time_remaining=game_duration;
-   std::uniform_int_distribution<int> random_w(0, (intWidth-200));
+
+   // generate random position 
+   std::random_device dev;
+   std::mt19937 engine(dev());
+   std::uniform_int_distribution<int> random_w(0, (intWidth-230));
    std::uniform_int_distribution<int> random_h(0, (intHeight-180)); 
    score->set(0);
    for (int mole_id=0; mole_id<concurrency;mole_id++){
-       int x{0};
-       int y{0};
+       int x{0}, y{0};
        while (!LegalPos(x,y)){
        x=random_w(engine);
        y=random_h(engine);
@@ -73,20 +77,33 @@ void Game::Run(Controller &controller, Renderer &renderer,
     frame_start = SDL_GetTicks();
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
     controller.HandleInput(running,exited,_moles,score,reset);
-    // Input, Update, Render - the main game loop.
-    // renderer.RenderWindow(_moles);
-    // Keep track of how long each loop through the input/update/render cycle
-    // takes.
-    // After every 1/10 second, update the window title.
+    // After every 1/100 second, update the window title.
     if (frame_count >= 100){
        if (running->get()){
           time_remaining=game_duration-((int)SDL_GetTicks()-game_start)/1000;
-          if (time_remaining<1 && running->get()){
+          if (time_remaining<0 && running->get()){
             SDL_Log("time is done!");
+            time_remaining=0;
             running->set(false);
+          }else if(_moles.size()<concurrency){
+            std::uniform_int_distribution<int> random_w(0, (intWidth-230));
+            std::uniform_int_distribution<int> random_h(0, (intHeight-180)); 
+            for (int i=0; i<concurrency-_moles.size(); i++){
+              std::random_device dev;
+              std::mt19937 engine(dev());
+              int x{0},y{0};
+              while (!LegalPos(x,y)){
+              x=random_w(engine);
+              y=random_h(engine);
+              }
+              std::shared_ptr<Mole> mole = std::make_shared<Mole>(x, y, running);
+              _moles.push_back(mole);
+              mole->Simulate(score);
+          }}
           }
-          }
-      
+      if (!running->get() && (_moles.size()>0)){
+        _moles.clear();
+      }
       renderer.RenderWindow(_moles);
       renderer.UpdateWindowTitle(score, time_remaining);
       frame_count = 0;

@@ -69,7 +69,7 @@ class Mole{
         std::vector<std::future<void>> check_alive_tasks;
     
     private: 
-        Uint32 update_duration{100};
+        Uint32 update_duration{50};
         Uint32 mole_start;
         Graphics *graphs;
         float ratio = 484.0/728.0;
