@@ -2,7 +2,7 @@
 This is Sophie's capstone project for Udacity's C++ Nanodegree. Whac a Mole was a very popular arcade game when I was young and I still remember playing on those coin-op machines on my way home from school. Now is a good chance to try bringing it into a video form with my c++ learning. Graphics are scraped from a free game platform called 4399.com.
 ### Game Rules
 
-![instruction](/images/cpp_capstone_instruction.png=100x64)
+![instruction](/images/cpp_capstone_instruction.png)
 * User can hit each mole at the top area to score 1 point (see the white outline in the graph above as an example). The scoring area is smaller when the mole is half hidden in the hole than when the mole is fully straight up. 
 * After being hit the mole will disappear and a new one will come up after some wait time.
 * User has a maximum of 30 seconds. After one round ends, user can press `r` key to restart the game. The operation will not be effective if the previous game hasn't timed out yet.
