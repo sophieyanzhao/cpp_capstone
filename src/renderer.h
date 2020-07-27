@@ -8,17 +8,12 @@
 
 class Renderer {
  public:
-  //constructor
   Renderer(const std::size_t screen_width, const std::size_t screen_height,
            const std::size_t grid_width, const std::size_t grid_height);
-  //destructor 
-  ~Renderer();
-
   void RenderWindow(std::vector<std::shared_ptr<Mole>> &moles);
   void DrawMoles(std::vector<std::shared_ptr<Mole>> &moles);
   void UpdateWindowTitle(std::shared_ptr<Score> score, int fps);
-  SDL_Surface* LoadSurface(std::string path);
-
+  ~Renderer();
 
  private:
   SDL_Window *sdl_window;

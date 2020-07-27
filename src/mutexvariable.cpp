@@ -19,9 +19,7 @@ void Score::AddOne(){
 template <class T>
 T MessageQueue<T>::receive(){
     std::unique_lock<std::mutex> uLock(_mutex);
-    _cond.wait(uLock, [this] { return !_messages.empty(); }); // pass unique lock to condition variable
-
-    // remove last vector element from queue
+    _cond.wait(uLock, [this] { return !_messages.empty(); }); // prevent spurious wakeup using condition variable
     T msg = std::move(_messages.back());
     _messages.pop_back();
     return msg; // will not be copied due to return value optimization (RVO) in C++
@@ -30,10 +28,7 @@ T MessageQueue<T>::receive(){
 
 template <class T>
 void MessageQueue<T>::send(T msg){
-    // perform vector modification under the lock
     std::lock_guard<std::mutex> uLock(_mutex);
-    // add vector to queue
-    // std::cout << "   Message " << msg << " has been sent to the queue" << std::endl;
     _messages.push_back(std::move(msg));
     _cond.notify_one(); 
 }
