@@ -1,8 +1,8 @@
 #include "renderer.h"
 #include <iostream>
 #include <string>
-#include <SDL_image.h>
 #include <mutex>
+#include <algorithm>
 using std::cout;
 
 Renderer::Renderer(const std::size_t screen_width,
@@ -45,7 +45,7 @@ void Renderer::RenderWindow(std::vector<std::shared_ptr<Mole>> &moles) {
 void Renderer::DrawMoles(std::vector<std::shared_ptr<Mole>> &moles){
    std::mutex mole_mutex;
    std::unique_lock<std::mutex> mole_lock(mole_mutex);
-   auto iter=remove_if(moles.begin(),moles.end(), [](std::shared_ptr<Mole> mole){return !mole->alive->get();});
+   auto iter=std::remove_if(moles.begin(),moles.end(), [](std::shared_ptr<Mole> mole){return !mole->alive->get();});
    moles.erase(iter, moles.end());
    mole_lock.unlock();
    for (auto mole: moles){

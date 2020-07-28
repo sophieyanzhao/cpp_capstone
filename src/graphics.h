@@ -1,7 +1,8 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-#include "SDL.h"
+// #include "SDL.h" //  for vscode
+#include <SDL2/SDL.h> // for ubuntu
 #include <vector>
 #include <string>
 #include <thread>
