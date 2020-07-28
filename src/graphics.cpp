@@ -1,6 +1,8 @@
 #include "graphics.h"
-#include <SDL_image.h>
-#include "SDL_surface.h"
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_surface.h>
+// #include <SDL_image.h> // for vscode 
+// #include "SDL_surface.h" // for vscode
 #include <iostream>
 #include <cmath>
 #include <string>
@@ -23,7 +25,6 @@ Graphics::~Graphics(){
 }
 
 SDL_Surface* Graphics::LoadSurface(std::string path){
-    SDL_Surface* optimizedSurface = NULL;
     SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
     if( loadedSurface == NULL){
         SDL_Log("Unable to load image! Path is %s", path.c_str());
@@ -69,24 +70,24 @@ void Mole::Update(){
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
     Uint32 mole_start = SDL_GetTicks();
-    std::stringstream ss;
-    auto myid = std::this_thread::get_id();
-    ss << ""<< myid;
-    string mystring = ss.str();
-    SDL_Log("mole thread id %s", mystring.c_str());
+    // the following commented codes are for concurrency debugging
+    // std::stringstream ss;
+    // auto myid = std::this_thread::get_id();
+    // ss << ""<< myid;
+    // string mystring = ss.str();
+    // SDL_Log("mole thread id %s", mystring.c_str());
     while (running->get()&&alive->get()){
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         auto myid = std::this_thread::get_id();
         if ((SDL_GetTicks()-mole_start)>update_duration){
-        idx=(idx+1)%8;
+        idx=(idx+1)%8; // 8 total stages 
         stage = transition[idx];
-        //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
         mole_start = SDL_GetTicks();
     }
     }
     // send signal to end the CheckAlive Task
     hit_signals->send(Position(-1, -1));
-    SDL_Log("exitting out of Update loop at thread %s", mystring.c_str());
+    // SDL_Log("exitting out of Update loop at thread %s", mystring.c_str());
 };
 
 
@@ -105,7 +106,6 @@ void Mole::CheckAlive(std::shared_ptr<Score> score , std::shared_ptr<MutexVariab
     while (running->get() && alive->get()){
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         Position p = hit_signals->receive();
-        SDL_Log("the mole gets hitted: at x: %d y: %d", p._x, p._y);
         if (Hit(p._x, p._y)){
             score->AddOne();
             alive->set(false);
@@ -113,5 +113,5 @@ void Mole::CheckAlive(std::shared_ptr<Score> score , std::shared_ptr<MutexVariab
             alive->set(false);
         }
     }
-    SDL_Log("mole is dying now");
+    // SDL_Log("mole is dying now");
 }

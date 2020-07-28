@@ -57,12 +57,12 @@ void Game::Run(Controller &controller, Renderer &renderer,
         mole->Simulate(score);
        
   }
-   
-  auto myid = std::this_thread::get_id();
-  std::stringstream ss;
-  ss << myid;
-  string mystring = ss.str();
-  SDL_Log("main task id %s", mystring.c_str());
+  // the following commented codes are for concurrency debugging
+  // auto myid = std::this_thread::get_id();
+  // std::stringstream ss;
+  // ss << myid;
+  // string mystring = ss.str();
+  // SDL_Log("main task id %s", mystring.c_str());
   while (running->get()||exited->get()) {
     if (*reset){
        game_start= (int)SDL_GetTicks();

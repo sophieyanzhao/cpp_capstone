@@ -4,6 +4,7 @@
 #include <thread>
 #include <future>
 #include "mutexvariable.h"
+#include <algorithm>
 using std::future;
 
 

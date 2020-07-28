@@ -41,4 +41,23 @@ cpp_capstone
   
 ## Installation Instruction
 
- [after build]
+### CMAKE
+
+The udacity workspace does not have SDL_image installed, so first run :
+`apt-get install libsdl2-image-dev`
+
+Next, make a folder named build (or anything). Type in the following commands in order to start the program:
+
+`cd build`
+`cmake ..`
+`./WhacAMole`
+
+### VScode in MAC
+
+If you use vscode on Mac and you have installed sdl and related extentions inside your framework folder, you can simply go to main.cpp.
+Then from the top menu bar of vscode, click Terminal-> Run Build Task.
+You can then run the file named "WhacAMole" in your src folder.
+
+* If you installed your SDL library and extentions elsewhere, you need to modify configs in .vscodes
+* In addition, the current image paths are customized to Udacity's ubuntu server. If you use vscode, please switch all include statement such as `include <SDL2/name.h> to simply <name.h>
+
