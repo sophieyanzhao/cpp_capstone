@@ -58,6 +58,6 @@ If you use vscode on Mac and you have installed sdl and related extentions insid
 Then from the top menu bar of vscode, click Terminal-> Run Build Task.
 You can then run the file named "WhacAMole" in your src folder.
 
-* If you installed your SDL library and extentions elsewhere, you need to modify configs in .vscodes
-* In addition, the current image paths are customized to Udacity's ubuntu server. If you use vscode, please switch all include statement such as `include <SDL2/name.h> to simply <name.h>
+* If you installed your SDL library and extentions elsewhere, you need to modify configs in .vscode
+* In addition, the current paths are customized to Udacity's ubuntu server. If you use vscode, please switch all include statement such as `include <SDL2/name.h> to simply <name.h>
 
